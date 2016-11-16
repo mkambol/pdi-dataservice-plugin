@@ -43,7 +43,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT A, B, C\nFROM Service\nWHERE B > 5\nORDER BY B DESC";
 
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -73,7 +73,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT A as \"FROM\", B as \"TO\", C\nFROM Service\nWHERE B > 5\nORDER BY B DESC";
 
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -91,7 +91,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT A as \"FROM\", B as \"TO\", C, COUNT(*)\nFROM Service\nWHERE B > 5\nGROUP BY A,B,C\nHAVING COUNT(*) > 100\nORDER BY A,B,C";
 
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -108,7 +108,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT *\nFROM Service\nWHERE B > 5\nORDER BY B DESC";
 
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -138,7 +138,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT count(*) as NrOfRows FROM Service";
 
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -169,7 +169,7 @@ public class SQLTest extends TestCase {
       "SELECT DISTINCT\n          BT_SERVICE_SERVICE.Category AS COL0\n         ,BT_SERVICE_SERVICE.Country AS COL1\n         ,BT_SERVICE_SERVICE.products_sold AS COL2\n         ,BT_SERVICE_SERVICE.sales_amount AS COL3\n"
         + "FROM \n          Service BT_SERVICE_SERVICE\n" + "ORDER BY\n          COL0";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -197,7 +197,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "select \"Service\".\"Category\" as \"c0\" from \"Service\" as \"Service\" group by \"Service\".\"Category\" order by CASE WHEN \"Service\".\"Category\" IS NULL THEN 1 ELSE 0 END, \"Service\".\"Category\" ASC";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Service", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -223,7 +223,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT            BT_MONGODB_MONGODB.state AS COL0          ,SUM(BT_MONGODB_MONGODB.rows) AS COL1 FROM            MongoDB BT_MONGODB_MONGODB GROUP BY            BT_MONGODB_MONGODB.state ORDER BY            COL1 DESC";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "MongoDB", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -250,7 +250,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT Category, Country, products_sold, sales_amount FROM Kettle.Service";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Kettle", sql.getNamespace() );
     assertEquals( "Service", sql.getServiceName() );
@@ -275,7 +275,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT Category, Country, products_sold, sales_amount FROM Kettle.\"Service\"";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Kettle", sql.getNamespace() );
     assertEquals( "Service", sql.getServiceName() );
@@ -300,7 +300,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT Category, Country, products_sold, sales_amount FROM \"Kettle\".Service";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Kettle", sql.getNamespace() );
     assertEquals( "Service", sql.getServiceName() );
@@ -325,7 +325,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT Category, Country, products_sold, sales_amount FROM \"Kettle\".\"Service\"";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "Kettle", sql.getNamespace() );
     assertEquals( "Service", sql.getServiceName() );
@@ -351,7 +351,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT * FROM \"GETTING_STARTED\" WHERE \"GETTING_STARTED\".\"CUSTOMERNAME\" = 'ANNA''S DECORATIONS, LTD'";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "GETTING_STARTED", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -372,7 +372,7 @@ public class SQLTest extends TestCase {
 
     String sqlString = "SELECT * FROM \"GETTING_STARTED\" WHERE \"GETTING_STARTED\".\"CUSTOMERNAME\" = ''";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "GETTING_STARTED", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -394,7 +394,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT * FROM \"GETTING_STARTED\" WHERE \"GETTING_STARTED\".\"CUSTOMERNAME\" = ''''''''''''";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "GETTING_STARTED", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -416,7 +416,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT * FROM \"GETTING_STARTED\" WHERE \"GETTING_STARTED\".\"CUSTOMERNAME\" IN ('ANNA''S DECORATIONS, LTD', 'MEN ''R'' US RETAILERS, Ltd.' )";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "GETTING_STARTED", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -439,7 +439,7 @@ public class SQLTest extends TestCase {
     String sqlString =
       "SELECT * FROM \"GETTING_STARTED\" WHERE \"GETTING_STARTED\".\"CUSTOMERNAME\" IN ('ANNA''S DECORATIONS; LTD', 'MEN ''R'' US RETAILERS; Ltd.' )";
 
-    SQL sql = new SQL( ThinUtil.stripNewlines( sqlString ) );
+    SQLOld sql = new SQLOld( ThinUtil.stripNewlines( sqlString ) );
 
     assertEquals( "GETTING_STARTED", sql.getServiceName() );
     sql.parse( rowMeta );
@@ -454,7 +454,7 @@ public class SQLTest extends TestCase {
   public void testSql18() throws KettleSQLException {
 
     String sqlString = "SELECT A, B, C\nFROM Service\nWHERE B > 5\nORDER BY B DESC\nLIMIT 5    OFFSET    10";
-    SQL sql = new SQL( sqlString );
+    SQLOld sql = new SQLOld( sqlString );
     RowMetaInterface rowMeta = generateTest4RowMeta();
     sql.parse( rowMeta );
 
@@ -462,7 +462,7 @@ public class SQLTest extends TestCase {
     assertEquals( 10, sql.getLimitValues().getOffset() );
 
     sqlString = "SELECT A, B, C\nFROM Service\nWHERE B > 5\nORDER BY B DESC\nLIMIT 10, 5";
-    sql = new SQL( sqlString );
+    sql = new SQLOld( sqlString );
     rowMeta = generateTest4RowMeta();
     sql.parse( rowMeta );
 
@@ -470,14 +470,14 @@ public class SQLTest extends TestCase {
     assertEquals( 10, sql.getLimitValues().getOffset() );
 
     sqlString = "SELECT A, B, C\nFROM Service\nWHERE B > 5\nORDER BY B DESC\nLIMIT 5";
-    sql = new SQL( sqlString );
+    sql = new SQLOld( sqlString );
     rowMeta = generateTest4RowMeta();
     sql.parse( rowMeta );
 
     assertEquals( 5, sql.getLimitValues().getLimit() );
 
     sqlString = "SELECT A, B, C\nFROM Service\nWHERE B > 5\nORDER BY B DESC\nLIMIT ERROR5";
-    sql = new SQL( sqlString );
+    sql = new SQLOld( sqlString );
     rowMeta = generateTest4RowMeta();
 
     try {

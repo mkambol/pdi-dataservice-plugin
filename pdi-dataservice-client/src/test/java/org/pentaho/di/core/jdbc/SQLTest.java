@@ -27,14 +27,14 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.pentaho.di.core.exception.KettleSQLException;
-import org.pentaho.di.core.sql.SQL;
+import org.pentaho.di.core.sql.SQLOld;
 
 public class SQLTest {
   @Test
   public void testExample1() throws KettleSQLException {
     String select = "A, B, C";
     String from = "Step";
-    SQL sql = new SQL( "SELECT " + select + " FROM " + from );
+    SQLOld sql = new SQLOld( "SELECT " + select + " FROM " + from );
     assertEquals( select, sql.getSelectClause() );
     assertEquals( from, sql.getServiceName() );
     assertNull( sql.getWhereClause() );
@@ -48,7 +48,7 @@ public class SQLTest {
     String select = "A, B, C";
     String from = "Step";
     String where = "D > 6 AND E = 'abcd'";
-    SQL sql = new SQL( "SELECT " + select + " FROM " + from + " WHERE " + where );
+    SQLOld sql = new SQLOld( "SELECT " + select + " FROM " + from + " WHERE " + where );
     assertEquals( select, sql.getSelectClause() );
     assertEquals( from, sql.getServiceName() );
     assertEquals( where, sql.getWhereClause() );
@@ -62,7 +62,7 @@ public class SQLTest {
     String select = "A, B, C";
     String from = "Step";
     String order = "B, A, C";
-    SQL sql = new SQL( "SELECT " + select + " FROM " + from + " ORDER BY " + order );
+    SQLOld sql = new SQLOld( "SELECT " + select + " FROM " + from + " ORDER BY " + order );
     assertEquals( select, sql.getSelectClause() );
     assertEquals( from, sql.getServiceName() );
     assertNull( sql.getWhereClause() );
@@ -79,8 +79,8 @@ public class SQLTest {
     String group = "A, B";
     String having = "sum(C) > 100";
     String order = "sum(C) DESC";
-    SQL sql =
-        new SQL( "SELECT " + select + " FROM " + from + " WHERE " + where + " GROUP BY " + group + " HAVING " + having
+    SQLOld sql =
+        new SQLOld( "SELECT " + select + " FROM " + from + " WHERE " + where + " GROUP BY " + group + " HAVING " + having
             + " ORDER BY " + order );
     assertEquals( select, sql.getSelectClause() );
     assertEquals( from, sql.getServiceName() );
@@ -94,7 +94,7 @@ public class SQLTest {
   public void testWhereInColumnIndexPDI12347() throws KettleSQLException {
     String select = "whereDoYouLive, good, fine";
     String from = "testingABC";
-    SQL sql = new SQL( "SELECT " + select + " FROM " + from );
+    SQLOld sql = new SQLOld( "SELECT " + select + " FROM " + from );
     assertEquals( select, sql.getSelectClause() );
     assertEquals( from, sql.getServiceName() );
     assertNull( sql.getWhereClause() );

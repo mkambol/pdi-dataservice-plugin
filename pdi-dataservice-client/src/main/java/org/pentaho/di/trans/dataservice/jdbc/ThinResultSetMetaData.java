@@ -28,6 +28,7 @@ import org.pentaho.di.core.row.ValueMetaInterface;
 import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class ThinResultSetMetaData extends ThinBase implements ResultSetMetaData {
 
@@ -46,25 +47,38 @@ public class ThinResultSetMetaData extends ThinBase implements ResultSetMetaData
 
   @Override
   public String getColumnClassName( int column ) throws SQLException {
-    switch ( rowMeta.getValueMeta( column - 1 ).getType() ) {
-      case ValueMetaInterface.TYPE_STRING:
-        return java.lang.String.class.getName();
-      case ValueMetaInterface.TYPE_NUMBER:
-        return java.lang.Double.class.getName();
-      case ValueMetaInterface.TYPE_DATE:
-        return java.util.Date.class.getName();
-      case ValueMetaInterface.TYPE_BIGNUMBER:
-        return BigDecimal.class.getName();
-      case ValueMetaInterface.TYPE_INTEGER:
-        return java.lang.Long.class.getName();
-      case ValueMetaInterface.TYPE_BOOLEAN:
-        return java.lang.Boolean.class.getName();
-      case ValueMetaInterface.TYPE_BINARY:
-        return ( new byte[0] ).getClass().getName();
-      default:
-        throw new SQLException( "Unknown data type for column " + column );
-    }
+    return getClassForType( rowMeta.getValueMeta( column - 1 ).getType() )
+      .orElseThrow( () -> new SQLException( "Unknown data type for column " + column ) )
+      .getName();
   }
+
+  public static Optional<Class> getClassForType( int valueMetaType ) {
+    Class clazz = null;
+    switch ( valueMetaType ) {
+      case ValueMetaInterface.TYPE_STRING:
+        clazz = java.lang.String.class;
+        break;
+      case ValueMetaInterface.TYPE_NUMBER:
+        clazz = java.lang.Double.class;
+        break;
+      case ValueMetaInterface.TYPE_DATE:
+        clazz = java.util.Date.class;
+        break;
+      case ValueMetaInterface.TYPE_BIGNUMBER:
+        clazz = BigDecimal.class;
+        break;
+      case ValueMetaInterface.TYPE_INTEGER:
+        clazz = java.lang.Long.class;
+        break;
+      case ValueMetaInterface.TYPE_BOOLEAN:
+        clazz = java.lang.Boolean.class;
+        break;
+      case ValueMetaInterface.TYPE_BINARY:
+        clazz = ( new byte[ 0 ] ).getClass();
+    }
+    return Optional.ofNullable( clazz );
+  }
+
 
   @Override
   public int getColumnCount() throws SQLException {

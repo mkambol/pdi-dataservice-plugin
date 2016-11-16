@@ -23,17 +23,15 @@
 package org.pentaho.di.core.sql;
 
 import com.google.common.collect.Lists;
-import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleSQLException;
-import org.pentaho.di.core.jdbc.ThinUtil;
 import org.pentaho.di.core.row.RowMetaInterface;
-import org.pentaho.di.core.row.ValueMetaInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class SQLFields {
-  private static final String DISTINCT_PREFIX = "DISTINCT ";
   private String tableAlias;
   private RowMetaInterface serviceFields;
   private String fieldsClause;
@@ -60,59 +58,18 @@ public class SQLFields {
 
     distinct = false;
 
-    parse( orderClause );
   }
 
-  private void parse( boolean orderClause ) throws KettleSQLException {
-    if ( Const.isEmpty( fieldsClause ) ) {
-      return;
-    }
-
-    if ( fieldsClause.regionMatches( true, 0, DISTINCT_PREFIX, 0, DISTINCT_PREFIX.length() ) ) {
-      distinct = true;
-      fieldsClause = fieldsClause.substring( DISTINCT_PREFIX.length() );
-    }
-
-    List<String> strings = new ArrayList<String>();
-    int startIndex = 0;
-    for ( int index = 0; index < fieldsClause.length(); index++ ) {
-      index = ThinUtil.skipChars( fieldsClause, index, '"', '\'', '(' );
-      if ( index >= fieldsClause.length() ) {
-        strings.add( fieldsClause.substring( startIndex ) );
-        startIndex = -1;
-        break;
-      }
-      if ( fieldsClause.charAt( index ) == ',' ) {
-        strings.add( fieldsClause.substring( startIndex, index ) );
-        startIndex = index + 1;
-      }
-    }
-    if ( startIndex >= 0 ) {
-      strings.add( fieldsClause.substring( startIndex ) );
-    }
-
-    // Now grab all the fields and determine their composition...
-    //
-    fields.clear();
-    for ( String string : strings ) {
-      String fieldString = ThinUtil.stripTableAlias( Const.trim( string ), tableAlias );
-      if ( "*".equals( fieldString ) ) {
-        // Add all service fields
-        //
-        for ( ValueMetaInterface valueMeta : serviceFields.getValueMetaList() ) {
-          fields.add( new SQLField(
-            tableAlias, "\"" + valueMeta.getName() + "\"", serviceFields, orderClause, selectFields ) );
-        }
-      } else {
-        fields.add( new SQLField( tableAlias, fieldString, serviceFields, orderClause, selectFields ) );
-      }
-    }
-
-    indexFields();
+  public SQLFields( RowMetaInterface rowMeta, List<SQLField> fields ) {
+    this.fields = fields;
+    this.serviceFields = rowMeta;
   }
+
+
 
   public List<SQLField> getFields() {
-    return fields;
+    return Optional.ofNullable( fields )
+      .orElse( Collections.emptyList() );
   }
 
   public List<SQLField> getNonAggregateFields() {

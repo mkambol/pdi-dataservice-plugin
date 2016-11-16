@@ -34,4 +34,6 @@ public enum SQLAggregation {
   public String getKeyWord() {
     return keyWord;
   }
+
+
 }
